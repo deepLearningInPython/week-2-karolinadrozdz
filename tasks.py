@@ -17,14 +17,17 @@ from sklearn import datasets
  
 # Copy and paste the code for that function here:
 # -----------------------------------------------
-def my_mlp(w, X, sigma=np.tanh):
-    W1 = np.array(w[0:4*6]).reshape(4,6)
-    W2 = np.array(w[4*6:7*4+6*4]).reshape(7,4)
-    W3 = np.array(w[7*4+6*4:]).reshape(1,7)
-   
-    a1 = sigma(W1 @ X)
-    a2 = sigma(W2 @ a1)
-    f  = sigma(W3 @ a2)
+def my_mlp(w, X, sigma = np.tanh):
+    # Construct between layer connection weights matrices W1, W2, and W3
+    W1 = w[:4 * 6].reshape(4, 6)
+    W2 = w[4 * 6:4 * 6 + 7 * 4].reshape(7, 4)
+    W3 = w[4 * 6 + 7 * 4:].reshape(1, 7)
+    
+    # Implement the equations
+    a1 = sigma(W1 @ X),  #   input -> layer 1
+    a2 = sigma(W2 @ a1), # layer 1 -> layer 2
+    f  = sigma(W3 @ a2) # layer 2 -> output
+    
     return f
 # -----------------------------------------------
  
@@ -40,7 +43,7 @@ def my_mlp(w, X, sigma=np.tanh):
 # -----------------------------------------------
 def MSE_func(w, X, y): # give the appropriate name and arguments
     f = my_mlp(w, X)
-    MSE = np.sum((y-f)**2)
+    MSE = np.sum((f-y)**2)
     return MSE
 # -----------------------------------------------
  
@@ -57,8 +60,8 @@ def MSE_func(w, X, y): # give the appropriate name and arguments
 # Copy and paste the code for that function here:
 # -----------------------------------------------
 def dR(beta, x, y):
-    dbeta_0 = 2*np.mean((beta[0] + beta[1]*x - y))   # implement the above formula for dR/dβ₀
-    dbeta_1 = 2*np.mean((beta[0] + beta[1]*x - y)*x) # implement the above formula for dR/dβ₁
+    dbeta_0 = 2*np.mean(beta[0] + beta[1]*x-y) # implement the above formula for dR/dβ₀
+    dbeta_1 = 2*np.mean((beta[0] + beta[1]*x-y)*x) # implement the above formula for dR/dβ₁
     return np.array([dbeta_0, dbeta_1])
  
 # -----------------------------------------------
